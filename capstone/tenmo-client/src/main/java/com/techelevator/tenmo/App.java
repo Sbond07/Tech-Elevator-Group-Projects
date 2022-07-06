@@ -4,6 +4,9 @@ import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.math.BigDecimal;
 
 public class App {
 
@@ -86,7 +89,7 @@ public class App {
 
 	private void viewCurrentBalance() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private void viewTransferHistory() {
