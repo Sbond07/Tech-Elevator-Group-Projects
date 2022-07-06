@@ -51,7 +51,7 @@ public class JdbcAccountDao implements AccountDao {
     @Override
     public Account getAccount(int accountId) throws AccountNotFoundException {
         Account account = null;
-        String sql = "SELECT account_id, user_id, balance FROM account WHERE account_id = ?";
+        String sql = "SELECT account_id, user_id, balance FROM account WHERE account_id = ?;";
 
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, accountId);
         if(result.next()) {
@@ -65,13 +65,15 @@ public class JdbcAccountDao implements AccountDao {
     // Update account
     @Override
     public boolean updateAccount(int accountId, Account account) {
-        return false;
+        String sql = "UPDATE account SET balance = ? WHERE account_id = ?;";
+        return jdbcTemplate.update(sql, account.getBalance(), account.getAccountId()) == 1;
     }
 
     // Delete accounts
     @Override
     public boolean deleteAccount(int accountId) {
-        return false;
+        String sql = "DELETE FROM account WHERE account_id = ?;";
+        return jdbcTemplate.update(sql, accountId) == 1;
     }
 
     private Account mapRowToAccount(SqlRowSet rs) {
