@@ -72,3 +72,5 @@ INSERT INTO transfer_type (transfer_type_desc) VALUES ('Request');
 INSERT INTO transfer_type (transfer_type_desc) VALUES ('Send');
 
 COMMIT;
+
+SELECT * FROM tenmo_user;
