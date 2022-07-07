@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.security.auth.login.AccountNotFoundException;
+import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,39 +18,15 @@ import java.util.List;
 public class JdbcAccountDao implements AccountDao {
     private JdbcTemplate jdbcTemplate;
 
-    public JdbcAccountDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public JdbcAccountDao(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public JdbcAccountDao() {
-        super();
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
-    }
-
-    // List accounts - modelled on catcards jdbcCatCardDao 10:15pm 7/6/22
+    // List accounts
     @Override
     public List<Account> list() {
         List<Account> accounts = new ArrayList<>();
-        String sql = "SELECT account_id, user_id, balance FROM account ";
+        String sql = "SELECT account_id, user_id, balance FROM account;";
 
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
         while(results.next()) {
@@ -76,11 +53,14 @@ public class JdbcAccountDao implements AccountDao {
 
     // Get account balance
     @Override
-    public BigDecimal getBalance(int accountId) {
-        int balance = 0;
-        String sql = "SELECT balance FROM account WHERE account_id = ?;";
+    public Account getBalance(int accountId) {
+        Account account = null;
+        String sql = "SELECT account_id, user_id, balance FROM account WHERE account_id = ?;";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, accountId);
-        return result.getBigDecimal(balance);
+        if(result.next()) {
+            account = mapRowToAccount(result);
+        }
+        return account;
     }
 
     // Update account

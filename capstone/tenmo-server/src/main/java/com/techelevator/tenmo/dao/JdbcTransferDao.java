@@ -12,38 +12,18 @@ import javax.security.auth.login.AccountNotFoundException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-//import java.util.logging.Logger;
+
 
 @Component
 public class JdbcTransferDao implements TransferDao {
 
     private JdbcTemplate jdbcTemplate;
-//    private Logger log = (Logger) LoggerFactory.getLogger(getClass());
 
     public JdbcTransferDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
-    }
-
+    // List transfers
     @Override
     public List<Transfer> list() {
         List<Transfer> transfers = new ArrayList<>();
@@ -56,7 +36,7 @@ public class JdbcTransferDao implements TransferDao {
         return transfers;
     }
 
-
+    // Get transfers
     @Override
     public Transfer get(int transferId) throws TransferNotFoundException {
         Transfer transfer = null;
@@ -71,6 +51,7 @@ public class JdbcTransferDao implements TransferDao {
         return transfer;
     }
 
+        // Create a transfer
     @Override
     public Transfer createTransfer(int accountFrom, int accountTo, BigDecimal amount) {
         Transfer transfer = new Transfer();

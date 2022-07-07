@@ -1,10 +1,7 @@
 package com.techelevator.tenmo.controller;
 
-import com.techelevator.tenmo.dao.AccountDao;
-import com.techelevator.tenmo.dao.TransferDao;
-import com.techelevator.tenmo.dao.UserDao;
+import com.techelevator.tenmo.dao.*;
 import com.techelevator.tenmo.model.Account;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountNotFoundException;
@@ -18,11 +15,11 @@ import java.util.List;
 @RequestMapping("/account")
 public class AccountController {
     //3:40pm - Jonathan - building an API endpoint to check the balance of an account.
-    private AccountDao accountDao;
-    private UserDao userDao;
-    private TransferDao transferDao;
+    private JdbcAccountDao accountDao;
+    private JdbcUserDao userDao;
+    private JdbcTransferDao transferDao;
 
-    public AccountController(AccountDao accountDao, UserDao userDao, TransferDao transferDao) {
+    public AccountController(JdbcAccountDao accountDao, JdbcUserDao userDao, JdbcTransferDao transferDao) {
         this.accountDao = accountDao;
         this.userDao = userDao;
         this.transferDao = transferDao;
@@ -47,7 +44,7 @@ public class AccountController {
 
     // Get account balance
     @RequestMapping(path = "/balance/{accountId}", method = RequestMethod.GET)
-    public BigDecimal getBalance(@PathVariable int accountId) {
+    public Account getBalance(@PathVariable int accountId) {
         return accountDao.getBalance(accountId);
     }
 
