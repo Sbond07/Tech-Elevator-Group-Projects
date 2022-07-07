@@ -2,6 +2,7 @@ package com.techelevator.tenmo.controller;
 
 import com.techelevator.tenmo.dao.*;
 import com.techelevator.tenmo.model.Account;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountNotFoundException;
@@ -10,28 +11,24 @@ import java.math.BigDecimal;
 import java.util.List;
 
 
-
 @RestController
+@PreAuthorize("isAuthenticated()")
 @RequestMapping("/account")
 public class AccountController {
     //3:40pm - Jonathan - building an API endpoint to check the balance of an account.
     private JdbcAccountDao accountDao;
-    private JdbcUserDao userDao;
-    private JdbcTransferDao transferDao;
 
-    public AccountController(JdbcAccountDao accountDao, JdbcUserDao userDao, JdbcTransferDao transferDao) {
+    public AccountController(JdbcAccountDao accountDao) {
         this.accountDao = accountDao;
-        this.userDao = userDao;
-        this.transferDao = transferDao;
     }
 
-    // List accounts - modelled on the catcards app
+    // List all accounts
     @RequestMapping(path = "", method = RequestMethod.GET)
     public List<Account> getAllAccounts() {
         return accountDao.list();
     }
 
-    // Get account
+    // Get an account
     @RequestMapping(path = "/{accountId}", method = RequestMethod.GET)
     public Account get(@PathVariable int accountId) {
         try {

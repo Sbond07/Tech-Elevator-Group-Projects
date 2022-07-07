@@ -5,6 +5,7 @@ import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.TransferNotFoundException;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SqlInOutParameter;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
@@ -58,10 +59,12 @@ public class JdbcTransferDao implements TransferDao {
         String sql = "BEGIN TRANSACTION;" +
                 "UPDATE account SET balance = balance - ? WHERE account_id = ?;" +
                 "UPDATE account SET balance = balance + ? WHERE account_id = ?;" +
-                "SELECT t.transfer_id FROM transfer t JOIN account a ON " +
-                "t.account_from = a.account_id WHERE t.account_from = ?; " +
+                "INSERT INTO transfer (transfer_type_id, transfer_status_id, " +
+                "account_from, account_to, amount) " +
+                "VALUES (?, ?, ?, ?, ?) RETURNING transfer_id;" +
                 "COMMIT;";
 
+       
         return null;
     }
 
