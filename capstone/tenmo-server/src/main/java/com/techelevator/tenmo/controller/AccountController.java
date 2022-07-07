@@ -14,9 +14,7 @@ import java.util.List;
 
 
 
-//@RestController  //<-- this breaks the server.  But without it, how will the mapping work???
-/* this annotation is also in the AuthenticationController and I can't find a place in
-our homework where it was placed on two classes.*/
+@RestController
 @RequestMapping("/account")
 public class AccountController {
     //3:40pm - Jonathan - building an API endpoint to check the balance of an account.
@@ -37,7 +35,7 @@ public class AccountController {
     }
 
     // Get account
-    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(path = "/{accountId}", method = RequestMethod.GET)
     public Account get(@PathVariable int accountId) {
         try {
             return accountDao.get(accountId);
@@ -48,21 +46,21 @@ public class AccountController {
     }
 
     // Get account balance
-    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(path = "/balance/{accountId}", method = RequestMethod.GET)
     public BigDecimal getBalance(@PathVariable int accountId) {
         return accountDao.getBalance(accountId);
     }
 
     // Update account
-    @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
-    public boolean updateAccount(@PathVariable @Valid int account_id, @RequestBody Account account) {
-        return accountDao.updateAccount(account_id, account);
+    @RequestMapping(path = "/update/{accountId}", method = RequestMethod.PUT)
+    public boolean updateAccount(@PathVariable @Valid int accountId, @RequestBody Account account) {
+        return accountDao.updateAccount(accountId, account);
     }
 
     // Delete account
-    @RequestMapping(path = "/{id}", method = RequestMethod.POST)
-    public void deleteAccount(@PathVariable int account_id) {
-        accountDao.deleteAccount(account_id);
+    @RequestMapping(path = "/delete/{accountId}", method = RequestMethod.POST)
+    public void deleteAccount(@PathVariable int accountId) {
+        accountDao.deleteAccount(accountId);
     }
 
 }
