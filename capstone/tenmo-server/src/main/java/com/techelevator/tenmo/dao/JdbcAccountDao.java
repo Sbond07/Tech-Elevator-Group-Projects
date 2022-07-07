@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.security.auth.login.AccountNotFoundException;
+import java.math.BigDecimal;
 import java.util.List;
 
 public class JdbcAccountDao implements AccountDao {
@@ -43,13 +44,14 @@ public class JdbcAccountDao implements AccountDao {
 
     // List accounts
     @Override
-    public List<Account> listAccounts() {
+    public List<Account> list() {
+
         return null;
     }
 
     // Get account
     @Override
-    public Account getAccount(int accountId) throws AccountNotFoundException {
+    public Account get(int accountId) throws AccountNotFoundException {
         Account account = null;
         String sql = "SELECT account_id, user_id, balance FROM account WHERE account_id = ?;";
 
@@ -62,6 +64,15 @@ public class JdbcAccountDao implements AccountDao {
         return account;
     }
 
+    // Get account balance
+    @Override
+    public BigDecimal getBalance(int accountId) {
+        int balance = 0;
+        String sql = "SELECT balance FROM account WHERE account_id = ?;";
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, accountId, BigDecimal.class);
+        return result.getBigDecimal(balance);
+    }
+
     // Update account
     @Override
     public boolean updateAccount(int accountId, Account account) {
@@ -69,11 +80,11 @@ public class JdbcAccountDao implements AccountDao {
         return jdbcTemplate.update(sql, account.getBalance(), account.getAccountId()) == 1;
     }
 
-    // Delete accounts
+    // Delete account
     @Override
-    public boolean deleteAccount(int accountId) {
+    public void deleteAccount(int accountId) {
         String sql = "DELETE FROM account WHERE account_id = ?;";
-        return jdbcTemplate.update(sql, accountId) == 1;
+        jdbcTemplate.update(sql, accountId);
     }
 
     private Account mapRowToAccount(SqlRowSet rs) {

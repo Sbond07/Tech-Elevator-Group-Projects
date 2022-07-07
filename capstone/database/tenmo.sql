@@ -1,4 +1,5 @@
 BEGIN TRANSACTION;
+SELECT * FROM account;
 
 DROP TABLE IF EXISTS transfer, account, tenmo_user, transfer_type, transfer_status;
 DROP SEQUENCE IF EXISTS seq_user_id, seq_account_id, seq_transfer_id;
@@ -72,5 +73,3 @@ INSERT INTO transfer_type (transfer_type_desc) VALUES ('Request');
 INSERT INTO transfer_type (transfer_type_desc) VALUES ('Send');
 
 COMMIT;
-
-SELECT * FROM tenmo_user;
