@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class JdbcAccountDao implements AccountDao {
@@ -42,11 +43,18 @@ public class JdbcAccountDao implements AccountDao {
         return super.toString();
     }
 
-    // List accounts
+    // List accounts - modelled on catcards jdbcCatCardDao 10:15pm 7/6/22
     @Override
     public List<Account> list() {
+        List<Account> accounts = new ArrayList<>();
+        String sql = "SELECT account_id, user_id, balance FROM account ";
 
-        return null;
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
+        while(results.next()) {
+            Account account = mapRowToAccount(results);
+            accounts.add(account);
+        }
+        return accounts;
     }
 
     // Get account

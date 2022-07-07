@@ -4,6 +4,7 @@ import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.TransferDao;
 import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.Account;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountNotFoundException;
@@ -11,6 +12,11 @@ import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 
+
+
+//@RestController  //<-- this breaks the server.  But without it, how will the mapping work???
+/* this annotation is also in the AuthenticationController and I can't find a place in
+our homework where it was placed on two classes.*/
 @RequestMapping("/account")
 public class AccountController {
     //3:40pm - Jonathan - building an API endpoint to check the balance of an account.
@@ -24,9 +30,9 @@ public class AccountController {
         this.transferDao = transferDao;
     }
 
-    // List accounts
-    @RequestMapping(method = RequestMethod.GET)
-    public List<Account> list() {
+    // List accounts - modelled on the catcards app
+    @RequestMapping(path = "", method = RequestMethod.GET)
+    public List<Account> getAllAccounts() {
         return accountDao.list();
     }
 
