@@ -1,10 +1,8 @@
 package com.techelevator.tenmo.controller;
 
+import com.techelevator.tenmo.dao.JdbcAccountDao;
 import com.techelevator.tenmo.dao.JdbcTransferDao;
-import com.techelevator.tenmo.model.Account;
-import com.techelevator.tenmo.model.RegisterUserDTO;
-import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.model.TransferNotFoundException;
+import com.techelevator.tenmo.model.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +20,11 @@ import java.util.List;
 public class TransferController {
 
     private JdbcTransferDao transferDao;
+    private JdbcAccountDao accountDao;
 
-    public TransferController(JdbcTransferDao transferDao) {
-
+    public TransferController(JdbcTransferDao transferDao, JdbcAccountDao accountDao) {
         this.transferDao = transferDao;
-
+        this.accountDao = accountDao;
     }
 
     //returning a list of transfers
@@ -52,16 +50,16 @@ public class TransferController {
     //Create transfer
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/createTransfer", method = RequestMethod.POST)
-    public void register(@Valid @RequestBody RegisterUserDTO newUser) {
-        if (!transferDao.createTransfer() {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User registration failed.");
-        }
+    public void createTransfer(@Valid @RequestBody TransferDTO newTransfer) {
+//        if (!transferDao.createTransfer(newTransfer.  )) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer failed.");
+//        }
     }
-
-    public Transfer createTransfer(int accountFrom, int accountTo, BigDecimal amount) {
-        Transfer transfer = new Transfer();
-
-    }
+//
+//    public Transfer createTransfer(int accountFrom, int accountTo, BigDecimal amount) {
+//        Transfer transfer = new Transfer();
+//
+//    }
 
 
 }

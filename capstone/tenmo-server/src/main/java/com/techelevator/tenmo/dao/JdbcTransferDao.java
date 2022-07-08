@@ -82,12 +82,6 @@ public class JdbcTransferDao implements TransferDao {
         return transfer;
     }
 
-    // TODO - ask if we need a deleteTransfer method or would it be a rescindTransfer?
-    @Override
-    public void deleteTransfer(int transferId) {
-
-    }
-
     private Transfer mapRowToTransfer(SqlRowSet rs) {
         Transfer transfer = new Transfer();
         transfer.setTransferId(rs.getInt("transfer_id"));
