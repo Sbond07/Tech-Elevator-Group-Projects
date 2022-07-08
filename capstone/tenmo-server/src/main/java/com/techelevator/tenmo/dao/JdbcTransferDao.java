@@ -28,7 +28,7 @@ public class JdbcTransferDao implements TransferDao {
     @Override
     public List<Transfer> list() {
         List<Transfer> transfers = new ArrayList<>();
-        String sql = "SELECT * FROM transfer;";
+        String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfer;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
         while (results.next()) {
             Transfer transfer = mapRowToTransfer(results);
@@ -41,7 +41,7 @@ public class JdbcTransferDao implements TransferDao {
     @Override
     public Transfer get(int transferId) throws TransferNotFoundException {
         Transfer transfer = null;
-        String sql = "SELECT * FROM transfer WHERE transfer_id = ?;";
+        String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfer WHERE transfer_id = ?;";
 
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferId);
         if (results.next()) {
@@ -91,7 +91,6 @@ public class JdbcTransferDao implements TransferDao {
     private Transfer mapRowToTransfer(SqlRowSet rs) {
         Transfer transfer = new Transfer();
         transfer.setTransferId(rs.getInt("transfer_id"));
-        transfer.setUserId(rs.getInt("user_id"));
         transfer.setTransferTypeId(rs.getInt("transfer_type_id"));
         transfer.setTransferStatusId(rs.getInt("transfer_status_id"));
         transfer.setAccountFrom(rs.getInt("account_from"));
