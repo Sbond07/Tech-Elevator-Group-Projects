@@ -1,15 +1,16 @@
 package com.techelevator.tenmo.model;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class TransferDTO {
 
-    @NotEmpty
+    @NotNull
     private int accountFrom;
-    @NotEmpty
+    @NotNull
     private int accountTo;
-    @NotEmpty
+    @NotNull
     private BigDecimal amount;
 
     public int getAccountFrom() {

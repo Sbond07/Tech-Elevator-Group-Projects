@@ -12,7 +12,7 @@ public interface AccountDao {
 
     Account get(int accountId) throws AccountNotFoundException;
 
-    Account getBalance(int accountId);
+    BigDecimal getBalance(int accountId);
 
     boolean updateAccount (int accountId, Account account);
 

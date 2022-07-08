@@ -1,11 +1,8 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Account;
-import com.techelevator.tenmo.model.User;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.security.auth.login.AccountNotFoundException;
@@ -52,16 +49,11 @@ public class JdbcAccountDao implements AccountDao {
 
     // Get account balance
     @Override
-    public Account getBalance(int accountId) {
-        Account account = null;
+    public BigDecimal getBalance(int accountId) {
         String sql = "SELECT balance FROM account WHERE account_id = ?;";
-        SqlRowSet result = jdbcTemplate.queryForObject(sql, accountId);
-//        Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class, accountFrom, accountTo, amount);
+        BigDecimal balance = jdbcTemplate.queryForObject(sql, BigDecimal.class, accountId);
 
-        if(result.next()) {
-            account = mapRowToAccount(result);
-        }
-        return account;
+        return balance;
     }
 
     // Update account

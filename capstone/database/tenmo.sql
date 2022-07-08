@@ -1,3 +1,12 @@
+SELECT t.transfer_id, t.transfer_type_id, t.transfer_status_id, t.account_from, t.account_to, t.amount FROM transfer t
+JOIN account a
+ON a.account_id = t.account_from
+WHERE a.user_id = 1001;
+
+
+
+
+
 BEGIN TRANSACTION;
 SELECT * FROM account;
 

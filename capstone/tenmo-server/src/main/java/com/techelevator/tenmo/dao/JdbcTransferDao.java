@@ -1,16 +1,12 @@
 package com.techelevator.tenmo.dao;
 
-import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.TransferNotFoundException;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.SqlInOutParameter;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.security.auth.login.AccountNotFoundException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +41,24 @@ public class JdbcTransferDao implements TransferDao {
         String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfer WHERE transfer_id = ?;";
 
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferId);
+        if (results.next()) {
+            transfer = mapRowToTransfer(results);
+        } else {
+            throw new TransferNotFoundException();
+        }
+        return transfer;
+    }
+
+    // Get transfers by userid
+    @Override
+    public Transfer getByUserId(int userId) throws TransferNotFoundException {
+        Transfer transfer = null;
+        String sql = "SELECT t.transfer_id, t.transfer_type_id, t.transfer_status_id, t.account_from, t.account_to, t.amount FROM transfer t " +
+                "JOIN account a " +
+                "ON a.account_id = t.account_from " +
+                "WHERE a.user_id = ?; ";
+
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
         if (results.next()) {
             transfer = mapRowToTransfer(results);
         } else {

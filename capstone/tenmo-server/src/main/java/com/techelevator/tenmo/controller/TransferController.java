@@ -45,10 +45,21 @@ public class TransferController {
         return null;
     }
 
+    //Get by userId
+    @RequestMapping(path = "/search/{userId}", method = RequestMethod.GET)
+    public Transfer getByUserId(@PathVariable int userId) {
+        try {
+            return transferDao.getByUserId(userId);
+        } catch (TransferNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     //Create transfer
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(value = "/createTransfer", method = RequestMethod.POST)
+    @RequestMapping(path = "/create", method = RequestMethod.POST)
     public Transfer createTransfer(@Valid @RequestBody TransferDTO newTransfer) {
         Transfer transfer = null;
 

@@ -40,8 +40,8 @@ public class AccountController {
     }
 
     // Get account balance
-    @RequestMapping(path = "/balance/{accountId}", method = RequestMethod.GET)
-    public Account getBalance(@PathVariable int accountId) {
+    @RequestMapping(path = "account/balance/{accountId}", method = RequestMethod.GET)
+    public BigDecimal getBalance(@PathVariable int accountId) {
         return accountDao.getBalance(accountId);
     }
 
