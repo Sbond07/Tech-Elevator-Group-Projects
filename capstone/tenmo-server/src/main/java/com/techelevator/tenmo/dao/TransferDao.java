@@ -14,7 +14,7 @@ public interface TransferDao {
 
     Transfer get(int transferId) throws AccountNotFoundException, TransferNotFoundException;
 
-    Transfer createTransfer(int accountFrom, int accountTo, BigDecimal amount);
+    Transfer createTransfer(int accountFrom, int accountTo, BigDecimal amount) throws TransferNotFoundException;
 
 }
 

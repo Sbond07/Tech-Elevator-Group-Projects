@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlInOutParameter;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.math.BigDecimal;
@@ -53,33 +54,26 @@ public class JdbcTransferDao implements TransferDao {
     }
 
         // Create a transfer
+    @Transactional
     @Override
-    public Transfer createTransfer(int accountFrom, int accountTo, BigDecimal amount) {
+    public Transfer createTransfer(int accountFrom, int accountTo, BigDecimal amount) throws TransferNotFoundException {
         Transfer transfer = new Transfer();
-        String sql = "BEGIN TRANSACTION;" +
-                "UPDATE account SET balance = balance - ? WHERE account_id = ?;" +
-                "UPDATE account SET balance = balance + ? WHERE account_id = ?;" +
-                "INSERT INTO transfer_type (transfer_type_desc) " +
-                "VALUES ('Send');" +
-                "INSERT INTO transfer_status (transfer_status_desc) " +
-                "VALUES ('Approved');" +
+        String sql = "UPDATE account SET balance = balance - ? WHERE account_id = ?;";
+        jdbcTemplate.update(sql, amount, accountFrom);
 
-                "INSERT INTO transfer (transfer_type_id, transfer_status_id, " +
+        sql = "UPDATE account SET balance = balance + ? WHERE account_id = ?;";
+        jdbcTemplate.update(sql, amount, accountTo);
+
+        sql =   "INSERT INTO transfer (transfer_type_id, transfer_status_id, " +
                 "account_from, account_to, amount) " +
                 "VALUES ((SELECT transfer_type_id FROM transfer_type " +
-                        "WHERE transfer_type_desc = 'Send' ORDER BY transfer_type_id DESC LIMIT 1)," +
+                        "WHERE transfer_type_desc = 'Send')," +
                         "(SELECT transfer_status_id FROM transfer_status " +
-                        "WHERE transfer_status_desc = 'Approved' ORDER BY transfer_status_id DESC LIMIT 1)," +
-                        " ?, ?, ?) RETURNING transfer_id;" +
-                "COMMIT;" +
-                "SELECT * FROM transfer ORDER BY transfer_id DESC LIMIT 1;";
+                        "WHERE transfer_status_desc = 'Approved')," +
+                        " ?, ?, ?) RETURNING transfer_id;";
+        Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class, accountFrom, accountTo, amount);
 
-        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, amount, accountFrom, amount, accountTo,
-                                                    accountFrom, accountTo, amount);
-        if(result.next()) {
-            transfer = mapRowToTransfer(result);
-        }
-        return transfer;
+        return get(transferId);
     }
 
     private Transfer mapRowToTransfer(SqlRowSet rs) {

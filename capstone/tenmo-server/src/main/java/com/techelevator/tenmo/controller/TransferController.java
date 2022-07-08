@@ -50,16 +50,23 @@ public class TransferController {
     //Create transfer
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/createTransfer", method = RequestMethod.POST)
-    public void createTransfer(@Valid @RequestBody TransferDTO newTransfer) {
-//        if (!transferDao.createTransfer(newTransfer.  )) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer failed.");
-//        }
-    }
-//
-//    public Transfer createTransfer(int accountFrom, int accountTo, BigDecimal amount) {
-//        Transfer transfer = new Transfer();
-//
-//    }
+    public Transfer createTransfer(@Valid @RequestBody TransferDTO newTransfer) {
+        Transfer transfer = null;
 
+        try {
+            Account fromAccount = accountDao.get(newTransfer.getAccountFrom());
+            if (fromAccount.getBalance().compareTo(newTransfer.getAmount()) < 0) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient funds.");
+            }
+            if (newTransfer.getAccountFrom() == newTransfer.getAccountTo()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Don't waste your time and mine!!!");
+            }
+            transfer = transferDao.createTransfer(newTransfer.getAccountFrom(), newTransfer.getAccountTo(), newTransfer.getAmount());
+        } catch (TransferNotFoundException | AccountNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer failed.");
+
+        }
+        return transfer;
+    }
 
 }

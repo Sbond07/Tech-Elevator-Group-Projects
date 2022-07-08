@@ -54,8 +54,10 @@ public class JdbcAccountDao implements AccountDao {
     @Override
     public Account getBalance(int accountId) {
         Account account = null;
-        String sql = "SELECT account_id, user_id, balance FROM account WHERE account_id = ?;";
-        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, accountId);
+        String sql = "SELECT balance FROM account WHERE account_id = ?;";
+        SqlRowSet result = jdbcTemplate.queryForObject(sql, accountId);
+//        Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class, accountFrom, accountTo, amount);
+
         if(result.next()) {
             account = mapRowToAccount(result);
         }
