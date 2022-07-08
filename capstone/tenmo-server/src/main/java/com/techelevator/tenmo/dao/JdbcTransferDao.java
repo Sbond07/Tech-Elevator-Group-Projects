@@ -59,20 +59,30 @@ public class JdbcTransferDao implements TransferDao {
         String sql = "BEGIN TRANSACTION;" +
                 "UPDATE account SET balance = balance - ? WHERE account_id = ?;" +
                 "UPDATE account SET balance = balance + ? WHERE account_id = ?;" +
+                "INSERT INTO transfer_type (transfer_type_desc) " +
+                "VALUES ('Send');" +
+                "INSERT INTO transfer_status (transfer_status_desc) " +
+                "VALUES ('Approved');" +
+
                 "INSERT INTO transfer (transfer_type_id, transfer_status_id, " +
                 "account_from, account_to, amount) " +
-                "VALUES (?, ?, ?, ?, ?) RETURNING transfer_id;" +
-                "COMMIT;";
+                "VALUES ((SELECT transfer_type_id FROM transfer_type " +
+                        "WHERE transfer_type_desc = 'Send' ORDER BY transfer_type_id DESC LIMIT 1)," +
+                        "(SELECT transfer_status_id FROM transfer_status " +
+                        "WHERE transfer_status_desc = 'Approved' ORDER BY transfer_status_id DESC LIMIT 1)," +
+                        " ?, ?, ?) RETURNING transfer_id;" +
+                "COMMIT;" +
+                "SELECT * FROM transfer ORDER BY transfer_id DESC LIMIT 1;";
 
-       
-        return null;
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, amount, accountFrom, amount, accountTo,
+                                                    accountFrom, accountTo, amount);
+        if(result.next()) {
+            transfer = mapRowToTransfer(result);
+        }
+        return transfer;
     }
 
-    @Override
-    public boolean updateTransfer(int transferId, Transfer transfer) {
-        return false;
-    }
-
+    // TODO - ask if we need a deleteTransfer method or would it be a rescindTransfer?
     @Override
     public void deleteTransfer(int transferId) {
 

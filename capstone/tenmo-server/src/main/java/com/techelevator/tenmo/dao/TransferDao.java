@@ -16,8 +16,6 @@ public interface TransferDao {
 
     Transfer createTransfer(int accountFrom, int accountTo, BigDecimal amount);
 
-    boolean updateTransfer (int transferId, Transfer transfer);
-
     void deleteTransfer (int transferId);
 
 

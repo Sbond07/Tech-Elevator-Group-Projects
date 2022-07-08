@@ -15,7 +15,7 @@ import java.util.List;
 @PreAuthorize("isAuthenticated()")
 @RequestMapping("/account")
 public class AccountController {
-    //3:40pm - Jonathan - building an API endpoint to check the balance of an account.
+
     private JdbcAccountDao accountDao;
 
     public AccountController(JdbcAccountDao accountDao) {
