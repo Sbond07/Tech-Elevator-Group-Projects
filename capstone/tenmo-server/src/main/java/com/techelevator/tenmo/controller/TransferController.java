@@ -46,7 +46,6 @@ public class TransferController {
     }
 
 
-
     //Create transfer
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/createTransfer", method = RequestMethod.POST)
@@ -64,7 +63,6 @@ public class TransferController {
             transfer = transferDao.createTransfer(newTransfer.getAccountFrom(), newTransfer.getAccountTo(), newTransfer.getAmount());
         } catch (TransferNotFoundException | AccountNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer failed.");
-
         }
         return transfer;
     }
