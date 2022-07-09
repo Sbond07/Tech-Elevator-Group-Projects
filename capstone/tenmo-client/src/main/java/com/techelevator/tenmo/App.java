@@ -2,10 +2,12 @@ package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.IdentityDTO;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
+import com.techelevator.tenmo.services.TransferService;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.math.BigDecimal;
@@ -18,6 +20,7 @@ public class App {
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
     private AccountService accountService = new AccountService();
     private AuthenticatedUser currentUser;
+    private TransferService transferService = new TransferService();
 
     public static void main(String[] args) {
         App app = new App();
@@ -89,20 +92,29 @@ public class App {
         }
     }
     
-	private void viewCurrentBalance(int accountId) {
-		// TODO Auto-generated method stub
-        BigDecimal balance = accountService.getBalance(accountId);
-            if (balance != null) {
-                System.out.println(balance);
+	private void viewCurrentBalance() {
+        int menuSelection = 1;
+        BigDecimal balance = accountService.getBalance(currentUser);
 
-            } else {
-                consoleService.printErrorMessage();
-            }
+		// TODO Auto-generated method stub
+//        BigDecimal balance = accountService.getBalance(accountId);
+//            if (balance != null) {
+//                System.out.println(balance);
+//
+//            } else {
+//                consoleService.printErrorMessage();
+//            }
 	}
 
 	private void viewTransferHistory() {
 		// TODO Auto-generated method stub
-		
+        int menuSelection = 2;
+        Transfer[] pastTransfers = transferService.listTransfers();
+        if (menuSelection == 2 && pastTransfers != null) {
+            System.out.println(pastTransfers);
+        } else {
+            consoleService.printErrorMessage();
+        }
 	}
 
 	private void viewPendingRequests() {
