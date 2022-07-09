@@ -1,6 +1,6 @@
 package com.techelevator.tenmo.model;
 
-// created based on Tom's mention that we may need a DTO to transfer funds
+
 public class RecipientDTO {
 
         private String username;

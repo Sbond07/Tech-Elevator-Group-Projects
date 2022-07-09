@@ -1,7 +1,9 @@
 package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.IdentityDTO;
 import com.techelevator.tenmo.model.UserCredentials;
+import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +16,7 @@ public class App {
 
     private final ConsoleService consoleService = new ConsoleService();
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
-
+    private AccountService accountService = new AccountService();
     private AuthenticatedUser currentUser;
 
     public static void main(String[] args) {
@@ -86,12 +88,16 @@ public class App {
             consoleService.pause();
         }
     }
-
-
-	private void viewCurrentBalance() {
+    
+	private void viewCurrentBalance(int accountId) {
 		// TODO Auto-generated method stub
+        BigDecimal balance = accountService.getBalance(accountId);
+            if (balance != null) {
+                System.out.println(balance);
 
-
+            } else {
+                consoleService.printErrorMessage();
+            }
 	}
 
 	private void viewTransferHistory() {

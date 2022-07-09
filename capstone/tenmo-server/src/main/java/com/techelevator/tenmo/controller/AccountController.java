@@ -17,9 +17,11 @@ import java.util.List;
 public class AccountController {
 
     private JdbcAccountDao accountDao;
+    private JdbcUserDao userDao;
 
-    public AccountController(JdbcAccountDao accountDao) {
+    public AccountController(JdbcAccountDao accountDao, JdbcUserDao userDao) {
         this.accountDao = accountDao;
+        this.userDao = userDao;
     }
 
     // List all accounts
@@ -39,8 +41,19 @@ public class AccountController {
         return null;
     }
 
+    // Get an account by user ID
+    @RequestMapping(path = "search/{userId}", method = RequestMethod.GET)
+    public Account getByUserId(@PathVariable int userId) {
+        try {
+            return accountDao.getByUserId(userId);
+        } catch (AccountNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     // Get account balance
-    @RequestMapping(path = "account/balance/{accountId}", method = RequestMethod.GET)
+    @RequestMapping(path = "/balance/{accountId}", method = RequestMethod.GET)
     public BigDecimal getBalance(@PathVariable int accountId) {
         return accountDao.getBalance(accountId);
     }

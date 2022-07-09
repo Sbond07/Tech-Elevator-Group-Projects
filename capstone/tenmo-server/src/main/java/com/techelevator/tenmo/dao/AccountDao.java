@@ -12,6 +12,8 @@ public interface AccountDao {
 
     Account get(int accountId) throws AccountNotFoundException;
 
+    Account getByUserId(int userId) throws AccountNotFoundException;
+
     BigDecimal getBalance(int accountId);
 
     boolean updateAccount (int accountId, Account account);

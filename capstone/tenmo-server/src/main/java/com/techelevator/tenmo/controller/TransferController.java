@@ -60,7 +60,6 @@ public class TransferController {
         return null;
     }
 
-
     //Create transfer
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/create", method = RequestMethod.POST)
