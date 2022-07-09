@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 
 
@@ -47,7 +48,10 @@ public class TransferController {
 
     //Get by userId
     @RequestMapping(path = "/search/{userId}", method = RequestMethod.GET)
-    public Transfer getByUserId(@PathVariable int userId) {
+    public List<Transfer> getByUserId(@PathVariable int userId) {
+       /* TODO If we want to be secure: add as parameter above : , Principal principal
+        if (principal.getName().equals()
+         need to call the user.getName inside the equals above */
         try {
             return transferDao.getByUserId(userId);
         } catch (TransferNotFoundException e) {

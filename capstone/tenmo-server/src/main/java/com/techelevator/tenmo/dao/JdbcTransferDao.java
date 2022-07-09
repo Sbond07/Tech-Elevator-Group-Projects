@@ -63,7 +63,7 @@ public class JdbcTransferDao implements TransferDao {
                 "ON a.account_id = t.account_from " +
                 "WHERE a.user_id = ?; ";
 
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
         while (results.next()) {
             Transfer transfer = mapRowToTransfer(results);
             transfers.add(transfer);
