@@ -49,22 +49,26 @@ public class JdbcTransferDao implements TransferDao {
         return transfer;
     }
 
-    // Get transfers by userid
+    // Get transfers by userid // change this to get a list
+    /*
+    public List<Transfer> list() {
+        List<Transfer> transfers = new ArrayList<>();
+     */
+
     @Override
-    public Transfer getByUserId(int userId) throws TransferNotFoundException {
-        Transfer transfer = null;
+    public List<Transfer> getByUserId(int userId) throws TransferNotFoundException {
+        List<Transfer> transfers = new ArrayList<>();
         String sql = "SELECT t.transfer_id, t.transfer_type_id, t.transfer_status_id, t.account_from, t.account_to, t.amount FROM transfer t " +
                 "JOIN account a " +
                 "ON a.account_id = t.account_from " +
                 "WHERE a.user_id = ?; ";
 
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
-        if (results.next()) {
-            transfer = mapRowToTransfer(results);
-        } else {
-            throw new TransferNotFoundException();
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
+        while (results.next()) {
+            Transfer transfer = mapRowToTransfer(results);
+            transfers.add(transfer);
         }
-        return transfer;
+        return transfers;
     }
 
         // Create a transfer

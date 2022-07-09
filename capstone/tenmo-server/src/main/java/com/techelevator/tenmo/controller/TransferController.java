@@ -71,9 +71,13 @@ public class TransferController {
             if (newTransfer.getAccountFrom() == newTransfer.getAccountTo()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Don't waste your time and mine!!!");
             }
+            if (newTransfer.getAmount().compareTo(BigDecimal.valueOf(0)) <= 0 ) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Why do you want to transfer 0 or less? Why bother?");
+            }
+
             transfer = transferDao.createTransfer(newTransfer.getAccountFrom(), newTransfer.getAccountTo(), newTransfer.getAmount());
         } catch (TransferNotFoundException | AccountNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer failed.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transfer failed. Team 2 - you can solve this!");
         }
         return transfer;
     }
