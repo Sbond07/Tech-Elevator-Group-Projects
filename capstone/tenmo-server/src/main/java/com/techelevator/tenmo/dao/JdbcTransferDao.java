@@ -83,7 +83,7 @@ public class JdbcTransferDao implements TransferDao {
                         "(SELECT transfer_status_id FROM transfer_status " +
                         "WHERE transfer_status_desc = 'Approved')," +
                         " ?, ?, ?) RETURNING transfer_id;";
-        Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class, Integer.class, accountFrom, accountTo, amount);
+        Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class, accountFrom, accountTo, amount);
 
         return get(transferId);
     }
