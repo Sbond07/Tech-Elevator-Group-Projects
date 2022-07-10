@@ -12,6 +12,7 @@ public class Transfer {
     private BigDecimal amount;
     private int userId;
 
+
     public Transfer(int transfer_id, int transferTypeId
             , int transferStatusId, int accountFrom
             , int accountTo, BigDecimal amount, int userId) {
@@ -83,4 +84,6 @@ public class Transfer {
     public void setUserId(int userId) {
         this.userId = userId;
     }
+
+
 }

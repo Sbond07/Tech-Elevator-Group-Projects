@@ -1,14 +1,56 @@
-SELECT t.transfer_id, t.transfer_type_id, t.transfer_status_id, t.account_from, t.account_to, t.amount FROM transfer t
-JOIN account a
-ON a.account_id = t.account_from
-WHERE a.user_id = 1001;
+-- INSERT INTO transfer (transfer_type_id, transfer_status_id, 
+--                 account_from, account_to, amount) 
+--                 VALUES ((SELECT transfer_type_id FROM transfer_type 
+--                         WHERE transfer_type_desc = 'Send'), 
+--                         (SELECT transfer_status_id FROM transfer_status
+--                         WHERE transfer_status_desc = 'Approved'),
+--                          2002, 2001, 50) RETURNING transfer_id;
+
+-- wanted:
+-- ------------------------------------------
+-- Transfer Details
+-- --------------------------------------------
+--  Id: 23
+--  From: Bernice 
+--  To: Me Myselfandi
+--  Type: Send
+--  Status: Approved
+--  Amount: $903.14
+-- testing the subselect for username:
+-- SELECT tu.username 
+-- FROM transfer t 
+-- RIGHT JOIN account a ON t.account_from = a.account_id 
+-- JOIN tenmo_user tu ON tu.user_id = a.user_id
+-- JOIN transfer_status ts ON ts.transfer_status_id = t.transfer_status_id
+-- JOIN transfer_type tt ON tt.transfer_type_id = t.transfer_type_id
+-- WHERE t.transfer_id =3001
+
+
+SELECT t.transfer_id, (SELECT tu.username WHERE t.transfer_id =?), username (to), transfer_type_desc,  transfer_status_desc, amount 
+FROM transfer t 
+RIGHT JOIN account a ON t.account_from = a.account_id 
+JOIN tenmo_user tu ON tu.user_id = a.user_id
+JOIN transfer_status ts ON ts.transfer_status_id = t.transfer_status_id
+JOIN transfer_type tt ON tt.transfer_type_id = t.transfer_type_id
+WHERE transfer_id = ?;
 
 
 
+
+
+SELECT transfer_id, transfer_type_id, 
+       transfer_status_id, account_from, account_to, 
+       amount 
+	   FROM transfer WHERE transfer_id = ?;
 
 
 BEGIN TRANSACTION;
-SELECT * FROM account;
+SELECT * FROM transfer;
+
+SELECT t.transfer_id, t.transfer_type_id, t.transfer_status_id, t.account_from, t.account_to, t.amount FROM transfer t
+                JOIN account a 
+                ON a.account_id = t.account_from 
+                WHERE a.user_id = 1001; 
 
 DROP TABLE IF EXISTS transfer, account, tenmo_user, transfer_type, transfer_status;
 DROP SEQUENCE IF EXISTS seq_user_id, seq_account_id, seq_transfer_id;
