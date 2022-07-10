@@ -58,7 +58,7 @@ public class JdbcUserDao implements UserDao {
     @Override
     public boolean create(String username, String password) {
 
-        // create user
+        // Create a user
         String sql = "INSERT INTO tenmo_user (username, password_hash) VALUES (?, ?)" +
                 " RETURNING user_id";
         String password_hash = new BCryptPasswordEncoder().encode(password);
@@ -69,7 +69,7 @@ public class JdbcUserDao implements UserDao {
             return false;
         }
 
-        // create account
+        // Create an account
         sql = "INSERT INTO account (user_id, balance) values(?, ?)";
         try {
             jdbcTemplate.update(sql, newUserId, STARTING_BALANCE);

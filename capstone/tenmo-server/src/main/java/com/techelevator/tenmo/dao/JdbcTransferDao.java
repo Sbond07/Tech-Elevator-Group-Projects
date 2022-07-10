@@ -49,12 +49,7 @@ public class JdbcTransferDao implements TransferDao {
         return transfer;
     }
 
-    // Get transfers by userid // change this to get a list
-    /*
-    public List<Transfer> list() {
-        List<Transfer> transfers = new ArrayList<>();
-     */
-
+    // Get transfers by user ID
     @Override
     public List<Transfer> getByUserId(int userId) throws TransferNotFoundException {
         List<Transfer> transfers = new ArrayList<>();
@@ -75,7 +70,6 @@ public class JdbcTransferDao implements TransferDao {
     @Transactional
     @Override
     public Transfer createTransfer(int accountFrom, int accountTo, BigDecimal amount) throws TransferNotFoundException {
-        Transfer transfer = new Transfer();
         String sql = "UPDATE account SET balance = balance - ? WHERE account_id = ?;";
         jdbcTemplate.update(sql, amount, accountFrom);
 
@@ -85,11 +79,11 @@ public class JdbcTransferDao implements TransferDao {
         sql =   "INSERT INTO transfer (transfer_type_id, transfer_status_id, " +
                 "account_from, account_to, amount) " +
                 "VALUES ((SELECT transfer_type_id FROM transfer_type " +
-                        "WHERE transfer_type_desc = 'Send')," +
+                        "WHERE transfer_type_desc = 'Send'), " +
                         "(SELECT transfer_status_id FROM transfer_status " +
                         "WHERE transfer_status_desc = 'Approved')," +
                         " ?, ?, ?) RETURNING transfer_id;";
-        Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class, accountFrom, accountTo, amount);
+        Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class, Integer.class, accountFrom, accountTo, amount);
 
         return get(transferId);
     }

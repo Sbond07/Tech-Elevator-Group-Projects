@@ -2,12 +2,14 @@ package com.techelevator.tenmo.controller;
 
 import com.techelevator.tenmo.dao.*;
 import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.User;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountNotFoundException;
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 
 
@@ -53,9 +55,11 @@ public class AccountController {
     }
 
     // Get account balance
-    @RequestMapping(path = "/balance/{accountId}", method = RequestMethod.GET)
-    public BigDecimal getBalance(@PathVariable int accountId) {
-        return accountDao.getBalance(accountId);
+    @RequestMapping(path = "/balance", method = RequestMethod.GET)
+    public BigDecimal getBalance(Principal principal) throws AccountNotFoundException {
+        User user = userDao.findByUsername(principal.getName());
+        Account account = accountDao.getByUserId(user.getId().intValue());
+        return accountDao.getBalance(account.getAccountId());
     }
 
     // Update account

@@ -65,6 +65,9 @@ public class App {
         currentUser = authenticationService.login(credentials);
         if (currentUser == null) {
             consoleService.printErrorMessage();
+        }else {
+            String token = currentUser.getToken();
+            accountService.setAuthToken(token);
         }
     }
 
@@ -91,20 +94,17 @@ public class App {
             consoleService.pause();
         }
     }
-    
-	private void viewCurrentBalance() {
-        int menuSelection = 1;
-        BigDecimal balance = accountService.getBalance(currentUser);
 
-		// TODO Auto-generated method stub
-//        BigDecimal balance = accountService.getBalance(accountId);
-//            if (balance != null) {
-//                System.out.println(balance);
-//
-//            } else {
-//                consoleService.printErrorMessage();
-//            }
-	}
+    private void viewCurrentBalance() {
+        // TODO Auto-generated method stub
+        BigDecimal balance = accountService.getBalance();
+        if (balance != null) {
+            System.out.println(balance);
+
+        } else {
+            consoleService.printErrorMessage();
+        }
+    }
 
 	private void viewTransferHistory() {
 		// TODO Auto-generated method stub

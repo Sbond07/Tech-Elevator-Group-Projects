@@ -28,14 +28,14 @@ public class TransferController {
         this.accountDao = accountDao;
     }
 
-    //returning a list of transfers
+    // Get a list of transfers
     @RequestMapping(path = "", method = RequestMethod.GET)
     public List<Transfer> getAllTransfer() {
 
         return transferDao.list();
     }
 
-    //get a transfer
+    // Get a transfer
     @RequestMapping(path = "/{transferId}", method = RequestMethod.GET)
     public Transfer get(@PathVariable int transferId) {
         try {
@@ -46,12 +46,10 @@ public class TransferController {
         return null;
     }
 
-    //Get by userId
+    //Get a transfer by userId
     @RequestMapping(path = "/search/{userId}", method = RequestMethod.GET)
     public List<Transfer> getByUserId(@PathVariable int userId) {
-       /* TODO If we want to be secure: add as parameter above : , Principal principal
-        if (principal.getName().equals()
-         need to call the user.getName inside the equals above */
+
         try {
             return transferDao.getByUserId(userId);
         } catch (TransferNotFoundException e) {
@@ -60,7 +58,7 @@ public class TransferController {
         return null;
     }
 
-    //Create transfer
+    //Create a transfer
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/create", method = RequestMethod.POST)
     public Transfer createTransfer(@Valid @RequestBody TransferDTO newTransfer) {

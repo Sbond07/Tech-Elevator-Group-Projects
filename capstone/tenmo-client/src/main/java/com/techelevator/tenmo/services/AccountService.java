@@ -24,11 +24,11 @@ public class AccountService {
     }
 
     // Get balance
-    public BigDecimal getBalance(int accountId) {
+    public BigDecimal getBalance() {
         BigDecimal balance = null;
         try {
             ResponseEntity<BigDecimal> response =
-                    restTemplate.exchange(API_BASE_URL + "account/balance/" + accountId,
+                    restTemplate.exchange(API_BASE_URL + "account/balance",
             HttpMethod.GET, makeAuthEntity(), BigDecimal.class);
             balance = response.getBody();
         } catch (RestClientResponseException | ResourceAccessException e) {
